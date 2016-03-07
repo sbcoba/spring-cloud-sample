@@ -1,0 +1,36 @@
+spring.cloud.config.discovery.enabled: true
+eureka:
+  client:
+    registerWithEureka: true
+    fetchRegistry: true
+#    server:
+#      waitTimeInMsWhenSyncEmpty: 0
+  instance:
+    preferIpAddress: true
+    metadataMap:
+      instanceId: ${spring.application.name}:${spring.application.instance_id:${random.value}}
+
+---
+spring:
+  profiles: server
+  application.name: 'discovery'
+
+server.port: ${PORT:8761}
+
+eureka:
+  instance:
+    hostname: server
+  client:
+    serviceUrl.defaultZone: http://localhost:8762/eureka/
+
+---
+spring:
+  profiles: server2
+  application.name: 'discovery'
+server.port: 8762
+
+eureka:
+  instance:
+    hostname: server2
+  client:
+    serviceUrl.defaultZone: http://localhost:8761/eureka/
